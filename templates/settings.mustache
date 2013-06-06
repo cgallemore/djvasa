@@ -1,0 +1,160 @@
+{{#heroku}}
+import dj_database_url
+{{/heroku}}
+
+from os.path import join, dirname
+
+
+DEBUG = True
+TEMPLATE_DEBUG = DEBUG
+LOCAL = False
+
+INTERNAL_IPS = ("127.0.0.1",)
+
+ADMINS = (
+    ("{{full_name}}", "{{email}}"),)
+
+MANAGERS = ADMINS
+
+PROJECT_ROOT = dirname(__file__)
+
+{{#heroku}}
+DATABASES = {"default": dj_database_url.config(default="postgres://localhost")}
+{{/heroku}}
+
+# Local time zone for this installation. Choices can be found here:
+# http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
+# although not all choices may be available on all operating systems.
+# On Unix systems, a value of None will cause Django to use the same
+# timezone as the operating system.
+# If running in a Windows environment this must be set to the same as your
+# system time zone.
+TIME_ZONE = "America/Chicago"
+
+# Language code for this installation. All choices can be found here:
+# http://www.i18nguy.com/unicode/language-identifiers.html
+LANGUAGE_CODE = "en-us"
+
+SITE_ID = 1
+
+# If you set this to False, Django will make some optimizations so as not
+# to load the internationalization machinery.
+USE_I18N = True
+
+# If you set this to False, Django will not format dates, numbers and
+# calendars according to the current locale.
+USE_L10N = True
+
+# If you set this to False, Django will not use timezone-aware datetimes.
+USE_TZ = True
+
+MEDIA_ROOT = join(PROJECT_ROOT, "public", "media")
+MEDIA_URL = "/media/"
+STATIC_ROOT = join(PROJECT_ROOT, "public", "static")
+STATIC_URL = "/static/"
+ADMIN_MEDIA_PREFIX = "/static/admin/"
+STATICFILES_DIRS = (
+    join(PROJECT_ROOT, "static"),)
+
+STATICFILES_FINDERS = (
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+    "compressor.finders.CompressorFinder",)
+
+# Make this unique, and don"t share it with anybody.
+SECRET_KEY = "todo"
+
+TEMPLATE_LOADERS = (
+    "django.template.loaders.filesystem.Loader",
+    "django.template.loaders.app_directories.Loader",)
+
+MIDDLEWARE_CLASSES = (
+    "django.middleware.common.CommonMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",)
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.contrib.auth.context_processors.auth",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.media",
+    "django.core.context_processors.static",
+    "django.core.context_processors.tz",
+    "django.core.context_processors.request",
+    "django.contrib.messages.context_processors.messages",)
+
+ROOT_URLCONF = "{{project_name}}.urls"
+
+# Python dotted path to the WSGI application used by Django"s runserver.
+WSGI_APPLICATION = "{{project_name}}.wsgi.application"
+
+TEMPLATE_DIRS = (
+    join(PROJECT_ROOT, "templates"),)
+
+FIXTURE_DIRS = (
+    join(PROJECT_ROOT, "fixtures"),
+    join(PROJECT_ROOT, "fixtures", "tests"),)
+
+INSTALLED_APPS = (
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.sites",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "django.contrib.admin",
+
+    #third party apps
+    "django_extensions",
+    "gunicorn",
+
+    #{{project_name}} apps
+
+    # Keep this last, in case other apps have test runners (e.g. south)
+    "django_nose",)
+
+# A sample logging configuration. The only tangible logging
+# performed by this configuration is to send an email to
+# the site admins on every HTTP 500 error when DEBUG=False.
+# See http://docs.djangoproject.com/en/dev/topics/logging for
+# more details on how to customize your logging configuration.
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "filters": {
+        "require_debug_false": {
+            "()": "django.utils.log.RequireDebugFalse"
+        }
+    },
+    "handlers": {
+        "mail_admins": {
+            "level": "ERROR",
+            "filters": ["require_debug_false"],
+            "class": "django.utils.log.AdminEmailHandler"
+        }
+    },
+    "loggers": {
+        "django.request": {
+            "handlers": ["mail_admins"],
+            "level": "ERROR",
+            "propagate": True,
+        },
+    }
+}
+
+# DEFAULT_FROM_EMAIL = "{{project_name}} <noreply@{{project_name}}.com>"
+# EMAIL_HOST = ""
+# EMAIL_PORT = ""
+# EMAIL_HOST_USER = ""
+# EMAIL_HOST_PASSWORD = ""
+# EMAIL_SUBJECT_PREFIX = "[{{project_name}}]"
+
+# TEST_RUNNER = "django_nose.NoseTestSuiteRunner"
+# NOSE_ARGS = ["--with-coverage", "--cover-package={{project_name}}.apps", "--nocapture"]
+
+try:
+    from {{project_name}}.settingslocal import *
+except ImportError:
+    pass
