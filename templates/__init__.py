@@ -1,16 +1,19 @@
-__all__ = ('Manage', 'Settings', 'SettingsLocal', 'Urls', 'Wsgi',)
+__all__ = ('Manage', 'Requirements', 'Settings', 'SettingsLocal', 'Urls', 'Wsgi',)
 
 
 class Base(object):
-    project_name = None
-    heroku = None
+    _project_name = None
+    _heroku = None
 
-    def __init__(self, project_name, heroku=False):
-        self.project_name = project_name
-        self.heroku = heroku
+    def __init__(self, *args, **kwargs):
+        self._project_name = args[0]
+        self._heroku = kwargs.get('heroku', False)
 
     def project_name(self):
-        return self.project_name
+        return self._project_name
+
+    def heroku(self):
+        return self._heroku
 
 
 class Manage(Base):
@@ -19,10 +22,25 @@ class Manage(Base):
     """
 
 
+class Requirements(Base):
+    """
+    Maps to requirements.mustach
+    """
+
+
 class Settings(Base):
     """
     Maps to settings.mustache
     """
+    name = None
+    email = None
+    secret_key = None
+
+    def __init__(self, *args, **kwargs):
+        super(Settings, self).__init__(*args, **kwargs)
+        self.secret_key = kwargs.get('secret_key')
+        self.name = raw_input("What's your full name? ")
+        self.email = raw_input("What's your email? ")
 
 
 class SettingsLocal(Base):

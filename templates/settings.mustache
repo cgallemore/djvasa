@@ -62,7 +62,7 @@ STATICFILES_FINDERS = (
     "compressor.finders.CompressorFinder",)
 
 # Make this unique, and don"t share it with anybody.
-SECRET_KEY = "todo"
+SECRET_KEY = "{{secret_key}}"
 
 TEMPLATE_LOADERS = (
     "django.template.loaders.filesystem.Loader",
@@ -113,7 +113,8 @@ INSTALLED_APPS = (
     #{{project_name}} apps
 
     # Keep this last, in case other apps have test runners (e.g. south)
-    "django_nose",)
+    # "django_nose",
+)
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
