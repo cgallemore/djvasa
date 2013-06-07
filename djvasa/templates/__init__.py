@@ -33,7 +33,7 @@ class Settings(Base):
     def __init__(self, *args, **kwargs):
         super(Settings, self).__init__(*args, **kwargs)
         self.secret_key = kwargs.get('secret_key')
-        self.name = raw_input("What's your full name? ")
+        self.full_name = raw_input("What's your full name? ")
         self.email = raw_input("What's your email? ")
 
 

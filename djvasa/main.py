@@ -32,10 +32,11 @@ class Project(object):
         # Create manage.py
         self._create_file('manage.py', Manage(self.project_name))
 
-        # Create git or hg ignore file
+        # TODO Create git or hg ignore file
 
-        # Create Procfile if heroku
+        # TODO Create Procfile if heroku
 
+        # TODO Make Vagrant optional
         # Create vagrant file if vagrant
         self._create_file('Vagrantfile', Vagrantfile(self.project_name))
 
