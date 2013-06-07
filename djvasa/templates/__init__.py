@@ -1,4 +1,4 @@
-__all__ = ('Manage', 'Requirements', 'Settings', 'SettingsLocal', 'Urls', 'Wsgi',)
+__all__ = ('Manage', 'Settings', 'SettingsLocal', 'Urls', 'Wsgi', 'Vagrantfile',)
 
 
 class Base(object):
@@ -19,12 +19,6 @@ class Base(object):
 class Manage(Base):
     """
     Maps to manage.mustache
-    """
-
-
-class Requirements(Base):
-    """
-    Maps to requirements.mustach
     """
 
 
@@ -58,4 +52,10 @@ class Urls(Base):
 class Wsgi(Base):
     """
     Maps to wsgi.mustache
+    """
+
+
+class Vagrantfile(Base):
+    """
+    Maps to vagrantfile.mustache
     """

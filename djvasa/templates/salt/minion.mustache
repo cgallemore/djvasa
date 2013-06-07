@@ -1,0 +1,9 @@
+# Set the location of the salt master server, if the master server cannot be
+# resolved, then the minion will fail to start.
+master: localhost
+
+# Set the file client, the client defaults to looking on the master server for
+# files, but can be directed to look at the local file directory setting 
+# defined below by setting it to local.
+file_client: local
+

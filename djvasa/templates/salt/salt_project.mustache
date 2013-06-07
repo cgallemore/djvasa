@@ -1,0 +1,10 @@
+include:
+- requirements
+
+/home/vagrant/.virtualenv/{{project_name}}:
+    virtualenv.managed:
+        - no-site-packages: True
+        - runas: vagrant
+        - requirements: salt://requirements.pip
+        - require:
+            - pkg: python-virtualenv

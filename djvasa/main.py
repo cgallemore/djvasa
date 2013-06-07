@@ -3,6 +3,7 @@ import pystache
 import os
 import random
 from djvasa.templates import *
+from djvasa.templates.salt import *
 
 
 class Project(object):
@@ -13,7 +14,7 @@ class Project(object):
         self.project_name = raw_input("What's the name of your project? ")
         self.heroku = heroku
         self.renderer = pystache.Renderer()
-        self.project_path = os.path.join(os.getcwd(), self.project_name)
+        self.project_path = self.project_root = os.path.join(os.getcwd(), self.project_name)
 
     def _create_file(self, name, template):
         with open(os.path.join(self.project_path, name), 'w+') as f:
@@ -31,14 +32,12 @@ class Project(object):
         # Create manage.py
         self._create_file('manage.py', Manage(self.project_name))
 
-        # Create requirements file
-        self._create_file('requirements.pip', Requirements(self.project_name))
-
         # Create git or hg ignore file
 
         # Create Procfile if heroku
 
         # Create vagrant file if vagrant
+        self._create_file('Vagrantfile', Vagrantfile(self.project_name))
 
         os.chdir(self.project_path)
         self.project_path = os.path.join(os.getcwd(), self.project_name)
@@ -56,6 +55,26 @@ class Project(object):
 
         # Create wsgi.py
         self._create_file('wsgi.py', Wsgi(self.project_name))
+
+        os.chdir(self.project_root)
+        self.project_path = os.path.join(os.getcwd(), 'salt')
+        os.makedirs('salt/roots/salt')
+
+        # Create minion
+        self._create_file('minion', Minion(self.project_name))
+
+        # Create top.sls
+        self.project_path = os.path.join(os.getcwd(), 'salt', 'roots', 'salt')
+        self._create_file('top.sls', Top(self.project_name))
+
+        # Create project_name.sls
+        self._create_file('%s.sls' % self.project_name, SaltProject(self.project_name))
+
+        # Create requirements.sls
+        self._create_file('requirements.sls', Requirements(self.project_name))
+
+        # Create requirements.pip
+        self._create_file('requirements.pip', PipRequirements(self.project_name))
 
 
 def main():
