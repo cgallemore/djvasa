@@ -2,7 +2,7 @@ import argparse
 import pystache
 import os
 import random
-from templates import *
+from djvasa.templates import *
 
 
 class Project(object):
