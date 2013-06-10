@@ -1,4 +1,4 @@
-__all__ = ('Manage', 'Settings', 'SettingsLocal', 'Urls', 'Wsgi', 'Vagrantfile',)
+__all__ = ('Manage', 'Settings', 'SettingsLocal', 'Urls', 'Wsgi', 'Vagrantfile', 'Procfile')
 
 
 class Base(object):
@@ -58,4 +58,10 @@ class Wsgi(Base):
 class Vagrantfile(Base):
     """
     Maps to vagrantfile.mustache
+    """
+
+
+class Procfile(Base):
+    """
+    Maps to procfile.mustache
     """

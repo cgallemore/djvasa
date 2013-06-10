@@ -35,6 +35,8 @@ class Project(object):
         # TODO Create git or hg ignore file
 
         # TODO Create Procfile if heroku
+        if self.heroku:
+            self._create_file('Procfile', Procfile(self.project_name))
 
         # TODO Make Vagrant optional
         # Create vagrant file if vagrant
@@ -46,7 +48,7 @@ class Project(object):
         open(os.path.join(self.project_path, '__init__.py'), 'w+').close()
 
         # Create settings.py
-        self._create_file('settings.py', Settings(self.project_name, secret_key=self._project_key))
+        self._create_file('settings.py', Settings(self.project_name, heroku=self.heroku, secret_key=self._project_key))
 
         # Create settingslocal.py
         self._create_file('settingslocal.py', SettingsLocal(self.project_name))
@@ -79,9 +81,10 @@ class Project(object):
 
 
 def main():
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument('-p', '--project', help="The Django project name.")
-    # args = parser.parse_args()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-u', '--heroku', action='store_true', default=False,
+                        help="Initialize the project for deployment to Heroku.")
+    args = parser.parse_args()
 
-    project = Project()
+    project = Project(heroku=args.heroku)
     project.initialize()
