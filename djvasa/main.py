@@ -9,10 +9,12 @@ from djvasa.templates.salt import *
 class Project(object):
     project_name = None
     heroku = None
+    mysql = None
 
-    def __init__(self, heroku=False):
+    def __init__(self, heroku=False, mysql=False):
         self.project_name = raw_input("What's the name of your project? ")
         self.heroku = heroku
+        self.mysql = mysql
         self.renderer = pystache.Renderer()
         self.project_path = self.project_root = os.path.join(os.getcwd(), self.project_name)
 
@@ -30,17 +32,17 @@ class Project(object):
         os.mkdir(self.project_name)
 
         # Create manage.py
-        self._create_file('manage.py', Manage(self.project_name))
+        self._create_file('manage.py', Manage(self.project_name, heroku=self.heroku, mysql=self.mysql))
 
         # TODO Create git or hg ignore file
 
         # TODO Create Procfile if heroku
         if self.heroku:
-            self._create_file('Procfile', Procfile(self.project_name))
+            self._create_file('Procfile', Procfile(self.project_name, heroku=self.heroku, mysql=self.mysql))
 
         # TODO Make Vagrant optional
         # Create vagrant file if vagrant
-        self._create_file('Vagrantfile', Vagrantfile(self.project_name))
+        self._create_file('Vagrantfile', Vagrantfile(self.project_name, heroku=self.heroku, mysql=self.mysql))
 
         os.chdir(self.project_path)
         self.project_path = os.path.join(os.getcwd(), self.project_name)
@@ -48,16 +50,16 @@ class Project(object):
         open(os.path.join(self.project_path, '__init__.py'), 'w+').close()
 
         # Create settings.py
-        self._create_file('settings.py', Settings(self.project_name, heroku=self.heroku, secret_key=self._project_key))
+        self._create_file('settings.py', Settings(self.project_name, heroku=self.heroku, mysql=self.mysql, secret_key=self._project_key))
 
         # Create settingslocal.py
-        self._create_file('settingslocal.py', SettingsLocal(self.project_name))
+        self._create_file('settingslocal.py', SettingsLocal(self.project_name, heroku=self.heroku, mysql=self.mysql))
 
         # Create urls.py
-        self._create_file('urls.py', Urls(self.project_name))
+        self._create_file('urls.py', Urls(self.project_name, heroku=self.heroku, mysql=self.mysql))
 
         # Create wsgi.py
-        self._create_file('wsgi.py', Wsgi(self.project_name))
+        self._create_file('wsgi.py', Wsgi(self.project_name, heroku=self.heroku, mysql=self.mysql))
 
         os.chdir(self.project_root)
         self.project_path = os.path.join(os.getcwd(), 'salt')
@@ -68,23 +70,27 @@ class Project(object):
 
         # Create top.sls
         self.project_path = os.path.join(os.getcwd(), 'salt', 'roots', 'salt')
-        self._create_file('top.sls', Top(self.project_name))
+        self._create_file('top.sls', Top(self.project_name, mysql=self.mysql))
 
         # Create project_name.sls
-        self._create_file('%s.sls' % self.project_name, SaltProject(self.project_name))
+        self._create_file('%s.sls' % self.project_name, SaltProject(self.project_name, heroku=self.heroku, mysql=self.mysql))
 
         # Create requirements.sls
-        self._create_file('requirements.sls', Requirements(self.project_name))
+        self._create_file('requirements.sls', Requirements(self.project_name, heroku=self.heroku, mysql=self.mysql))
 
         # Create requirements.pip
-        self._create_file('requirements.pip', PipRequirements(self.project_name))
+        self._create_file('requirements.pip', PipRequirements(self.project_name, heroku=self.heroku, mysql=self.mysql))
+
+        if self.mysql:
+            self._create_file('mysql.sls', Mysql(self.project_name, heroku=self.heroku, mysql=self.mysql))
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-u', '--heroku', action='store_true', default=False,
-                        help="Initialize the project for deployment to Heroku.")
+    parser.add_argument('--heroku', action='store_true', default=False, help="Initialize the project for "
+                                                                             "deployment to Heroku.")
+    parser.add_argument('--mysql', action='store_true', default=False, help='Initialize the project with MySQL.')
     args = parser.parse_args()
 
-    project = Project(heroku=args.heroku)
+    project = Project(heroku=args.heroku, mysql=args.mysql)
     project.initialize()

@@ -1,0 +1,25 @@
+mysql:
+  service.running:
+    - name: mysql
+    - require:
+      - pkg: mysql-server
+
+dbconfig:
+  mysql_user.present:
+    - name: django
+    - password: django
+    - require:
+      - service: mysql
+      - pkg: python-mysqldb
+
+  mysql_database.present:
+    - name: {{project_name}}
+    - require:
+      - mysql_user.present: dbconfig
+
+  mysql_grants.present:
+    - grant: all privileges
+    - database: {{project_name}}.*
+    - user: django
+    - require:
+      - mysql_database.present : dbconfig

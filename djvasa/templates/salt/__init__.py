@@ -1,7 +1,7 @@
 from djvasa.templates import Base
 
 
-__all__ = ('Minion', 'SaltProject', 'Requirements', 'Top', 'PipRequirements')
+__all__ = ('Minion', 'SaltProject', 'Requirements', 'Top', 'PipRequirements', 'Mysql')
 
 
 class Minion(Base):
@@ -31,4 +31,10 @@ class Top(Base):
 class PipRequirements(Base):
     """
     Maps to pip_requirements.mustache
+    """
+
+
+class Mysql(Base):
+    """
+    Maps to mysql.mustache
     """

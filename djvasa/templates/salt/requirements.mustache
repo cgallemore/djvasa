@@ -3,3 +3,8 @@ packages:
         - names:
             - python-dev
             - python-virtualenv
+            {{#mysql}}
+            - mysql-server
+            - python-mysqldb
+            - libmysqlclient-dev
+            {{/mysql}}

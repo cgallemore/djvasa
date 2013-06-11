@@ -1,4 +1,7 @@
 base:
   '*':
     - requirements
+    {{#mysql}}
+    - mysql
+    {{/mysql}}
     - {{project_name}}

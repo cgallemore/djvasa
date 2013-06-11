@@ -4,16 +4,21 @@ __all__ = ('Manage', 'Settings', 'SettingsLocal', 'Urls', 'Wsgi', 'Vagrantfile',
 class Base(object):
     _project_name = None
     _heroku = None
+    _mysql = None
 
     def __init__(self, *args, **kwargs):
         self._project_name = args[0]
         self._heroku = kwargs.get('heroku', False)
+        self._mysql = kwargs.get('mysql', False)
 
     def project_name(self):
         return self._project_name
 
     def heroku(self):
         return self._heroku
+
+    def mysql(self):
+        return self._mysql
 
 
 class Manage(Base):
