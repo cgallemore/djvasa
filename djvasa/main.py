@@ -72,6 +72,10 @@ class Project(object):
         self.project_path = os.path.join(os.getcwd(), 'salt')
         os.makedirs('salt/roots/salt')
 
+        if self.postgres:
+            # Create the pillar directories
+            os.mkdir('pillar')
+
         # Create minion
         self._create_file('minion', Minion(self.project_name))
 
@@ -94,6 +98,15 @@ class Project(object):
         if self.postgres:
             self._create_file('pg_hba.conf', Pgconf(self.project_name, **self._kwargs))
             self._create_file('postgres.sls', Postgres(self.project_name, **self._kwargs))
+
+            # create pillar directory and postgres settings.
+            pillar = os.path.join(self.project_root, 'pillar')
+            os.chdir(pillar)
+            self.project_path = pillar
+
+            self._create_file('top.sls', PillarTop(self.project_name, **self._kwargs))
+            self._create_file('settings.sls', PillarSettings(self.project_name, **self._kwargs))
+
 
 
 def main():
