@@ -7,13 +7,29 @@ This is currently under development, the general idea here is to be able to quic
 and get to work.  I'll be utilizing Vagrant to create a virtual environment and will be adding pieces to
 also setup other tools needed, like a database.
 
-In it's current state, djvasa will create a functional django project and the necessary Vagrant and SaltStack files to
-spin up the environment.  Up next on the list of todo's is adding support for initializing a database in Vagrant.
+Currently you can initialize a Django project with the choice of either MySQL or Postgres.  For example, to initialize
+with MySQL issue the following command:
+
+    >> djvasa --mysql
+
+This will create the necessary salt states for MySQL and when you run vagrant up MySQL will be installed, started, a user
+called django will be created and finally a database named the same as your project will be created.
+
+To initialize Django with Postgres, is the same as MySQL but with the --postgres flag:
+
+    >> djvasa --postgres
+
+Optionally, you can enable Heroku as well with the --heroku flag:
+
+    >> djvasa --heroku
+
+Since Heroku uses Postgres as the database, postgres will automatically be enabled for your project.  Your settings
+file will contain the necessary Heroku requirements.  I haven't fully got around to testing this yet, but am getting there.
 
 If you would like to try it, you can do the following, assuming you have Vagrant and Virtualbox installed:
 
     >> pip install git+git://github.com/cgallemore/djvasa.git
-    >> djvasa
+    >> djvasa --mysql
     What's the name of your project? foobar
     What's your full name? Chad Gallemore
     What's your email? cgallemore@gmail.com

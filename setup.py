@@ -4,6 +4,7 @@ import os
 import sys
 from setuptools import setup
 
+
 def publish():
     os.system('python setup.py sdist upload')
 
