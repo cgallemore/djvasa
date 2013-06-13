@@ -8,3 +8,7 @@ packages:
             - python-mysqldb
             - libmysqlclient-dev
             {{/mysql}}
+            {{#postgres}}
+            - postgresql
+            - libpq-dev
+            {{/postgres}}

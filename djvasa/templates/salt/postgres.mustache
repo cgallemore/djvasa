@@ -1,0 +1,37 @@
+postgresql:
+  service.running:
+    - name: postgresql
+    - enabled: True
+    - watch:
+        - file: /etc/postgresql/9.1/main/pg_hba.conf
+    - require:
+      - pkg: postgresql
+
+pg_hba.conf:
+  file.managed:
+    - name: /etc/postgresql/9.1/main/pg_hba.conf
+    - source: salt://pg_hba.conf
+    - user: postgres
+    - group: postgres
+    - mode: 644
+    - require:
+        - pkg: postgresql
+
+django:
+    postgres_user.present:
+        - name: django
+        - password: django
+        - createdb: True
+        - require:
+            - service: postgresql
+
+djangodb:
+    postgres_database.present:
+        - name: {{project_name}}
+        - encoding: UTF8
+        - lc_ctype: en_US.UTF8
+        - lc_collate: en_US.UTF8
+        - template: template0
+        - owner: django
+        - require:
+            - postgres_user: django

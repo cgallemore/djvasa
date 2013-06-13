@@ -5,11 +5,13 @@ class Base(object):
     _project_name = None
     _heroku = None
     _mysql = None
+    _postgres = None
 
     def __init__(self, *args, **kwargs):
         self._project_name = args[0]
         self._heroku = kwargs.get('heroku', False)
         self._mysql = kwargs.get('mysql', False)
+        self._postgres = kwargs.get('postgres', False)
 
     def project_name(self):
         return self._project_name
@@ -19,6 +21,9 @@ class Base(object):
 
     def mysql(self):
         return self._mysql
+
+    def postgres(self):
+        return self._postgres
 
 
 class Manage(Base):

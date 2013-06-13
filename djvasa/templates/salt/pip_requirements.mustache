@@ -1,6 +1,12 @@
-Django>=1.5.1
-django-extensions>=1.1.1
-gunicorn>=0.17.4
+Django==1.5.1
+django-extensions==1.1.1
+gunicorn==0.17.4
 {{#mysql}}
-MySQL-python==1.2.3
+MySQL-python==1.2.4
 {{/mysql}}
+{{#postgres}}
+psycopg2==2.5
+{{/postgres}}
+{{#heroku}}
+dj-database-url==0.2.1
+{{/heroku}}
