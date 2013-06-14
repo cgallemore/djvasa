@@ -12,7 +12,7 @@ class Project(object):
         self.project_name = raw_input("What's the name of your project? ")
         self.heroku = heroku
         self.mysql = mysql
-        self.postgres = postgres
+        self.postgres = postgres or heroku
         self.renderer = pystache.Renderer()
         self.project_path = self.project_root = os.path.join(os.getcwd(), self.project_name)
 
@@ -39,12 +39,11 @@ class Project(object):
 
         # Create manage.py
         self._create_file('manage.py', Manage(self.project_name, **self._kwargs))
+        self._create_file('requirements.txt', PipRequirements(self.project_name, **self._kwargs))
 
         # TODO Create git or hg ignore file
 
         if self.heroku:
-            # Since this is a heroku deployment, we want to enable postgres automatically
-            self.postgres = True
             self._create_file('Procfile', Procfile(self.project_name, **self._kwargs))
 
         self._create_file('Vagrantfile', Vagrantfile(self.project_name, **self._kwargs))
@@ -89,9 +88,6 @@ class Project(object):
         # Create requirements.sls
         self._create_file('requirements.sls', Requirements(self.project_name, **self._kwargs))
 
-        # Create requirements.pip
-        self._create_file('requirements.pip', PipRequirements(self.project_name, **self._kwargs))
-
         if self.mysql:
             self._create_file('mysql.sls', Mysql(self.project_name, **self._kwargs))
 
@@ -106,7 +102,6 @@ class Project(object):
 
             self._create_file('top.sls', PillarTop(self.project_name, **self._kwargs))
             self._create_file('settings.sls', PillarSettings(self.project_name, **self._kwargs))
-
 
 
 def main():

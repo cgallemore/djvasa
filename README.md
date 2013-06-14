@@ -19,12 +19,23 @@ To initialize Django with Postgres, is the same as MySQL but with the --postgres
 
     >> djvasa --postgres
 
-Optionally, you can enable Heroku as well with the --heroku flag:
+Optionally, you can enable Heroku as well with the --heroku flag (You'll need the Heroku toolbelt and an account setup):
 
     >> djvasa --heroku
+    What's the name of your project? foobar
+    What's your full name? Chad Gallemore
+    What's your email? cgallemore@gmail.com
+
+    >> git init
+    >> git add .
+    >> git ci -m"my django app"
+    >> heroku create
+    >> git push heroku master
+    >> heroku run python manage.py syncdb
+    >> heroku open
 
 Since Heroku uses Postgres as the database, postgres will automatically be enabled for your project.  Your settings
-file will contain the necessary Heroku requirements.  I haven't fully got around to testing this yet, but am getting there.
+file will contain the necessary Heroku requirements.  Still working on a couple of issues with the heroku option.
 
 If you would like to try it, you can do the following, assuming you have Vagrant and Virtualbox installed:
 

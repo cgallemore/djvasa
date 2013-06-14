@@ -2,7 +2,7 @@
     virtualenv.managed:
         - no-site-packages: True
         - runas: vagrant
-        - requirements: salt://requirements.pip
+        - requirements: /vagrant/requirements.txt
         - require:
             - pkg: python-dev
             - pkg: python-virtualenv
