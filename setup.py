@@ -21,8 +21,8 @@ setup(
     author_email='cgallemore@gmail.com',
     url='https://github.com/cgallemore/djvasa',
     license='BSD',
-    packages=['djvasa', 'djvasa.templates', 'djvasa.templates.salt'],
-    package_data={'djvasa': ['templates/*.mustache', 'templates/salt/*.mustache']},
+    packages=['djvasa', 'djvasa.templates'],
+    package_data={'djvasa': ['templates/*.mustache']},
     entry_points={
         'console_scripts': ['djvasa = djvasa.main:main'],
     },

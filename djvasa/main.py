@@ -3,8 +3,7 @@ import pystache
 import os
 import random
 import sys
-from djvasa.templates import *
-from djvasa.templates.salt import *
+from djvasa.templates import View
 
 
 class Project(object):
@@ -13,12 +12,18 @@ class Project(object):
         self.heroku = heroku
         self.mysql = mysql
         self.postgres = postgres or heroku
-        self.renderer = pystache.Renderer()
+        self.secret_key = self._project_key
+        self.full_name = raw_input("What's your full name? ")
+        self.email = raw_input("What's your email? ")
         self.project_path = self.project_root = os.path.join(os.getcwd(), self.project_name)
+        self.renderer = pystache.Renderer()
+        self.view = View(self.project_name, **self._kwargs)
 
-    def _create_file(self, name, template):
-        with open(os.path.join(self.project_path, name), 'w+') as f:
-            f.write(self.renderer.render(template))
+    def _create_file(self, names):
+        for file_name, template_name in names:
+            self.view.template_name = template_name
+            with open(os.path.join(self.project_path, file_name), 'w+') as f:
+                f.write(self.renderer.render(self.view))
 
     @property
     def _project_key(self):
@@ -30,42 +35,40 @@ class Project(object):
         return {
             'heroku': self.heroku,
             'mysql': self.mysql,
-            'postgres': self.postgres
+            'postgres': self.postgres,
+            'secret_key': self.secret_key,
+            'full_name': self.full_name,
+            'email': self.email
         }
 
     def initialize(self):
         # Create root directory
         os.mkdir(self.project_name)
-
-        # Create manage.py
-        self._create_file('manage.py', Manage(self.project_name, **self._kwargs))
-        self._create_file('requirements.txt', PipRequirements(self.project_name, **self._kwargs))
+        root_files = [
+            ('manage.py', 'manage'),
+            ('requirements.txt', 'pip_requirements'),
+            ('Vagrantfile', 'vagrantfile'),
+        ]
 
         # TODO Create git or hg ignore file
 
         if self.heroku:
-            self._create_file('Procfile', Procfile(self.project_name, **self._kwargs))
+            root_files.append(('Procfile', 'procfile'))
 
-        self._create_file('Vagrantfile', Vagrantfile(self.project_name, **self._kwargs))
+        self._create_file(root_files)
 
         os.chdir(self.project_path)
         self.project_path = os.path.join(os.getcwd(), self.project_name)
         os.mkdir(self.project_name)
         open(os.path.join(self.project_path, '__init__.py'), 'w+').close()
 
-        # Create settings.py
-        kwargs = self._kwargs
-        kwargs['secret_key'] = self._project_key
-        self._create_file('settings.py', Settings(self.project_name, **kwargs))
-
-        # Create settingslocal.py
-        self._create_file('settingslocal.py', SettingsLocal(self.project_name, **self._kwargs))
-
-        # Create urls.py
-        self._create_file('urls.py', Urls(self.project_name, **self._kwargs))
-
-        # Create wsgi.py
-        self._create_file('wsgi.py', Wsgi(self.project_name, **self._kwargs))
+        # Django files
+        self._create_file([
+            ('settings.py', 'settings'),
+            ('settingslocal.py', 'settings_local'),
+            ('urls.py', 'urls'),
+            ('wsgi.py', 'wsgi')
+        ])
 
         os.chdir(self.project_root)
         self.project_path = os.path.join(os.getcwd(), 'salt')
@@ -76,32 +79,34 @@ class Project(object):
             os.mkdir('pillar')
 
         # Create minion
-        self._create_file('minion', Minion(self.project_name))
+        self._create_file([('minion', 'minion')])
 
-        # Create top.sls
         self.project_path = os.path.join(os.getcwd(), 'salt', 'roots', 'salt')
-        self._create_file('top.sls', Top(self.project_name, **self._kwargs))
-
-        # Create project_name.sls
-        self._create_file('%s.sls' % self.project_name, SaltProject(self.project_name, **self._kwargs))
-
-        # Create requirements.sls
-        self._create_file('requirements.sls', Requirements(self.project_name, **self._kwargs))
+        salt_files = [
+            ('top.sls', 'top'),
+            ('%s.sls' % self.project_name, 'salt_project'),
+            ('requirements.sls', 'requirements')
+        ]
 
         if self.mysql:
-            self._create_file('mysql.sls', Mysql(self.project_name, **self._kwargs))
+            salt_files.append(('mysql.sls', 'mysql'))
 
         if self.postgres:
-            self._create_file('pg_hba.conf', Pgconf(self.project_name, **self._kwargs))
-            self._create_file('postgres.sls', Postgres(self.project_name, **self._kwargs))
+            salt_files.append(('pg_hba.conf', 'pgconf'))
+            salt_files.append(('postgres.sls', 'postgres'))
 
+        self._create_file(salt_files)
+
+        if self.postgres:
             # create pillar directory and postgres settings.
             pillar = os.path.join(self.project_root, 'pillar')
             os.chdir(pillar)
             self.project_path = pillar
 
-            self._create_file('top.sls', PillarTop(self.project_name, **self._kwargs))
-            self._create_file('settings.sls', PillarSettings(self.project_name, **self._kwargs))
+            self._create_file([
+                ('top.sls', 'pillar_top'),
+                ('settings.sls', 'pillar_settings')
+            ])
 
 
 def main():
