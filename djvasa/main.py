@@ -7,11 +7,13 @@ from djvasa.templates import View
 
 
 class Project(object):
-    def __init__(self, heroku=False, mysql=False, postgres=False):
+    def __init__(self, **kwargs):
         self.project_name = raw_input("What's the name of your project? ")
-        self.heroku = heroku
-        self.mysql = mysql
-        self.postgres = postgres or heroku
+        self.heroku = kwargs.get('heroku')
+        self.mysql = kwargs.get('mysql')
+        self.postgres = kwargs.get('postgres') or self.heroku
+        self.hg = kwargs.get('hg')
+        self.git = False if self.hg else True
         self.secret_key = self._project_key
         self.full_name = raw_input("What's your full name? ")
         self.email = raw_input("What's your email? ")
@@ -50,7 +52,10 @@ class Project(object):
             ('Vagrantfile', 'vagrantfile'),
         ]
 
-        # TODO Create git or hg ignore file
+        if self.hg:
+            self._create_file([('.hgignore', 'hgignore')])
+        else:
+            self._create_file([('.gitignore', 'gitignore')])
 
         if self.heroku:
             root_files.append(('Procfile', 'procfile'))
@@ -115,6 +120,7 @@ def main():
                                                                              "deployment to Heroku.")
     parser.add_argument('--mysql', action='store_true', default=False, help='Initialize the project with MySQL.')
     parser.add_argument('--postgres', action='store_true', default=False, help="Initialize the project with Postgres.")
+    parser.add_argument('--hg', action='store_true', default=False, help="Initialize project for mercurial.")
     args = parser.parse_args()
 
     if args.mysql and args.postgres:
@@ -124,5 +130,5 @@ def main():
         sys.exit("Enable MySQL is not valid with the heroku option.  By default postgres is enabled with "
                  "the heroku option is used.")
 
-    project = Project(heroku=args.heroku, mysql=args.mysql, postgres=args.postgres)
+    project = Project(**vars(args))
     project.initialize()
