@@ -26,6 +26,7 @@ Optionally, you can enable Heroku as well with the --heroku flag (You'll need th
     What's your full name? Chad Gallemore
     What's your email? cgallemore@gmail.com
 
+    >> cd foobar
     >> git init
     >> git add .
     >> git ci -m"my django app"

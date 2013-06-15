@@ -7,6 +7,8 @@ from djvasa.templates import View
 
 
 class Project(object):
+    _secret_key = None
+
     def __init__(self, **kwargs):
         self.project_name = raw_input("What's the name of your project? ")
         self.heroku = kwargs.get('heroku')
@@ -14,7 +16,6 @@ class Project(object):
         self.postgres = kwargs.get('postgres') or self.heroku
         self.hg = kwargs.get('hg')
         self.git = False if self.hg else True
-        self.secret_key = self._project_key
         self.full_name = raw_input("What's your full name? ")
         self.email = raw_input("What's your email? ")
         self.project_path = self.project_root = os.path.join(os.getcwd(), self.project_name)
@@ -28,9 +29,12 @@ class Project(object):
                 f.write(self.renderer.render(self.view))
 
     @property
-    def _project_key(self):
-        chars = "!@#$%^&*(-_=+)abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        return ''.join(random.choice(chars) for c in xrange(50))
+    def secret_key(self):
+        if not self._secret_key:
+            chars = "!@#$%^&*(-_=+)abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            self._secret_key = ''.join(random.choice(chars) for c in xrange(50))
+
+        return self._secret_key
 
     @property
     def _kwargs(self):
@@ -38,9 +42,9 @@ class Project(object):
             'heroku': self.heroku,
             'mysql': self.mysql,
             'postgres': self.postgres,
-            'secret_key': self.secret_key,
             'full_name': self.full_name,
-            'email': self.email
+            'email': self.email,
+            'secret_key': self.secret_key
         }
 
     def initialize(self):
