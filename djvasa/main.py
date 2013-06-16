@@ -47,37 +47,76 @@ class Project(object):
             'secret_key': self.secret_key
         }
 
+    @property
+    def root_files(self):
+        files = {
+            'manage.py': 'manage',
+            'requirements.txt': 'pip_requirements',
+            'Vagrantfile': 'vagrantfile'
+        }
+
+        if self.hg:
+            files['.hgignore'] = 'hgignore'
+        else:
+            files['.gitignore'] = 'gitignore'
+
+        if self.heroku:
+            files['Procfile'] = 'procfile'
+
+        return files.items()
+
+    @property
+    def django_files(self):
+        files = {
+            'settings.py': 'settings',
+            'settingslocal.py': 'settings_local',
+            'urls.py': 'urls',
+            'wsgi.py': 'wsgi'
+        }
+
+        return files.items()
+
+    @property
+    def salt_files(self):
+        files = {
+            'top.sls': 'top',
+            '%s.sls' % self.project_name: 'salt_project',
+            'requirements.sls': 'requirements'
+        }
+
+        if self.mysql:
+            files['mysql.sls'] = 'mysql'
+
+        if self.postgres:
+            files['pg_hba.conf'] = 'pgconf'
+            files['postgres.sls'] = 'postgres'
+
+        return files.items()
+
     def initialize(self):
         # Create root directory
         os.mkdir(self.project_name)
-        root_files = [
-            ('manage.py', 'manage'),
-            ('requirements.txt', 'pip_requirements'),
-            ('Vagrantfile', 'vagrantfile'),
-        ]
+        self._create_file(self.root_files)
 
-        if self.hg:
-            self._create_file([('.hgignore', 'hgignore')])
-        else:
-            self._create_file([('.gitignore', 'gitignore')])
-
-        if self.heroku:
-            root_files.append(('Procfile', 'procfile'))
-
-        self._create_file(root_files)
-
+        # Create project
         os.chdir(self.project_path)
         self.project_path = os.path.join(os.getcwd(), self.project_name)
         os.mkdir(self.project_name)
         open(os.path.join(self.project_path, '__init__.py'), 'w+').close()
+        self._create_file(self.django_files)
 
-        # Django files
-        self._create_file([
-            ('settings.py', 'settings'),
-            ('settingslocal.py', 'settings_local'),
-            ('urls.py', 'urls'),
-            ('wsgi.py', 'wsgi')
-        ])
+        os.chdir(self.project_name)
+        # Create static directories
+        os.mkdir('public')
+        os.mkdir('templates')
+        os.makedirs('static/css')
+        os.makedirs('static/js')
+        os.makedirs('static/img')
+        os.makedirs('static/less')
+
+        os.chdir('templates')
+        self.project_path = os.path.join(os.getcwd())
+        self._create_file([('base.html', 'base')])
 
         os.chdir(self.project_root)
         self.project_path = os.path.join(os.getcwd(), 'salt')
@@ -91,20 +130,7 @@ class Project(object):
         self._create_file([('minion', 'minion')])
 
         self.project_path = os.path.join(os.getcwd(), 'salt', 'roots', 'salt')
-        salt_files = [
-            ('top.sls', 'top'),
-            ('%s.sls' % self.project_name, 'salt_project'),
-            ('requirements.sls', 'requirements')
-        ]
-
-        if self.mysql:
-            salt_files.append(('mysql.sls', 'mysql'))
-
-        if self.postgres:
-            salt_files.append(('pg_hba.conf', 'pgconf'))
-            salt_files.append(('postgres.sls', 'postgres'))
-
-        self._create_file(salt_files)
+        self._create_file(self.salt_files)
 
         if self.postgres:
             # create pillar directory and postgres settings.
