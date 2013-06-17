@@ -1,1 +1,2 @@
-include *.md
+include README.rst
+include NEWS.rst

@@ -10,6 +10,7 @@ also setup other tools needed, like a database.
 Currently you can initialize a Django project with the choice of either MySQL or Postgres.  For example, to initialize
 with MySQL issue the following command:
 
+::
     >> djvasa --mysql
 
 This will create the necessary salt states for MySQL and when you run vagrant up MySQL will be installed, started, a user
@@ -17,10 +18,12 @@ called django will be created and finally a database named the same as your proj
 
 To initialize Django with Postgres, is the same as MySQL but with the --postgres flag:
 
+::
     >> djvasa --postgres
 
 Optionally, you can enable Heroku as well with the --heroku flag (You'll need the Heroku toolbelt and an account setup):
 
+::
     >> djvasa --heroku
     What's the name of your project? foobar
     What's your full name? Chad Gallemore
@@ -40,6 +43,7 @@ file will contain the necessary Heroku requirements.  Still working on a couple 
 
 If you would like to try it, you can do the following, assuming you have Vagrant and Virtualbox installed:
 
+::
     >> pip install git+git://github.com/cgallemore/djvasa.git
     >> djvasa --mysql
     What's the name of your project? foobar
