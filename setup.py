@@ -12,6 +12,11 @@ if sys.argv[-1] == 'publish':
     publish()
     sys.exit()
 
+current_version = sys.version_info[:2]
+optional_requirements = []
+if current_version < (2, 7) or current_version == (3, 1) or (3, 2):
+    optional_requirements.append('argparse>=1.2.1')
+
 setup(
     name='djvasa',
     version='0.1.0',
@@ -38,5 +43,5 @@ setup(
     },
     install_requires=[
         "pystache >= 0.5.3",
-    ],
+    ] + optional_requirements,
 )

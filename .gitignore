@@ -5,7 +5,7 @@
 
 .coverage
 .DS_Store
-.nose-ides
+.noseids
 
 .idea/*
 **/public
