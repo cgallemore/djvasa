@@ -5,6 +5,7 @@
 
 .coverage
 .DS_Store
+.nose-ides
 
 .idea/*
 **/public
@@ -17,3 +18,4 @@ venv
 dist/*
 build/*
 *.egg-info/*
+*.egg/*
