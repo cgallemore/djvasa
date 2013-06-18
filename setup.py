@@ -38,5 +38,6 @@ setup(
     },
     install_requires=[
         "pystache >= 0.5.3",
+        "nose>=1.0"
     ],
 )

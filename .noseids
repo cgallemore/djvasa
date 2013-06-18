@@ -1,0 +1,17 @@
+(dp1
+S'failed'
+p2
+(lp3
+sS'source_names'
+p4
+(lp5
+S'.'
+asS'ids'
+p6
+(dp7
+I1
+(S'/Users/cgallemore/workspace/git/djvasa/djvasa/tests.py'
+S'djvasa.tests'
+S'InitializeProjectTestCase.test_basic_init'
+tp8
+ss.
