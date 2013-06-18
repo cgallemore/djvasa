@@ -81,7 +81,8 @@ class Project(object):
         files = {
             'top.sls': 'top',
             '%s.sls' % self.project_name: 'salt_project',
-            'requirements.sls': 'requirements'
+            'requirements.sls': 'requirements',
+            'motd': 'motd'
         }
 
         if self.mysql:

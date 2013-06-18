@@ -1,8 +1,13 @@
 /home/vagrant/.virtualenv/{{project_name}}:
     virtualenv.managed:
         - no-site-packages: True
+        - distribute: True
         - runas: vagrant
         - requirements: /vagrant/requirements.txt
         - require:
             - pkg: python-dev
             - pkg: python-virtualenv
+
+/etc/motd:
+    file.managed:
+        - source: salt://motd
