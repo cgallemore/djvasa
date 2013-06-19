@@ -32,7 +32,7 @@ class Project(object):
     def secret_key(self):
         if not self._secret_key:
             chars = "!@#$%^&*(-_=+)abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-            self._secret_key = ''.join(random.choice(chars) for c in xrange(50))
+            self._secret_key = ''.join(random.choice(chars) for c in range(50))
 
         return self._secret_key
 
