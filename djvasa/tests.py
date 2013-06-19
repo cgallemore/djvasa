@@ -41,9 +41,6 @@ class InitializeProjectTestCase(unittest.TestCase):
             '__init__.py', 'settings.py', 'settingslocal.py', 'urls.py', 'wsgi.py',
             'static/css', 'static/js', 'static/less', 'static/img', 'templates/base.html', 'public'
         ])
-        self.assertTrue(os.path.exists('__init__.py'))
-        self.assertTrue(os.path.exists('settings.py'))
-
 
     def _kwargs(self, mysql=False, postgres=False, heroku=False, hg=False):
         return {
@@ -62,17 +59,17 @@ class InitializeProjectTestCase(unittest.TestCase):
         self._validate_django(**kwargs)
         self._validate_salt(**kwargs)
 
-    def test_init_with_mysql(self):
-        pass
-
-    def test_init_with_postgres(self):
-        pass
-
-    def test_init_with_heroku(self):
-        pass
-
-    def test_init_with_hg(self):
-        pass
+    # def test_init_with_mysql(self):
+    #     pass
+    #
+    # def test_init_with_postgres(self):
+    #     pass
+    #
+    # def test_init_with_heroku(self):
+    #     pass
+    #
+    # def test_init_with_hg(self):
+    #     pass
 
 
 
