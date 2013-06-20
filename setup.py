@@ -19,7 +19,7 @@ if current_version < (2, 7) or current_version == (3, 1) or (3, 2):
 
 setup(
     name='djvasa',
-    version='0.1.0',
+    version='0.2.0',
     description='Initialize a new Django project with Vagrant for easy start',
     long_description=open('README.rst').read(),
     author='Chad Gallemore',
