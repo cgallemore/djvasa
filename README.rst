@@ -8,7 +8,7 @@ djvasa
 
 In an effort to learn about Vagrant and SaltStack I had the idea to create a tool to help me initialize Django
 projects more efficiently, this is the result.  Djvasa is a command line tool to help you rapidly create a Django
-project for use with Vagrant.  In addition, the Vagrant environment can be provisioned with certain tool typical
+project for use with Vagrant.  In addition, the Vagrant environment can be provisioned with certain tools typical
 to a Django project ready for use.  The provisioning is handled with SaltStack.
 
 The following guide assumes you already have Vagrant and VirtualBox installed and that you have the salty-vagrant
@@ -20,7 +20,9 @@ plugin installed.  If you have Vagrant and VirtualBox already, but need the plug
 
 Quick Start
 -----------
+
 ::
+
     >> pip install djvasa
     >> djvasa --postgres
     What's the name of your project? foobar
@@ -48,7 +50,7 @@ mercurial there is a flag for enabling mercurial
 
 ::
 
-    >>> djvasa -h
+    >> djvasa -h
     usage: djvasa [-h] [--heroku] [--mysql] [--postgres] [--hg]
 
     optional arguments:
