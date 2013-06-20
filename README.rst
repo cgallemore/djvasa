@@ -1,5 +1,9 @@
-djvasa
 ======
+Djvasa
+======
+
+.. image:: https://secure.travis-ci.org/cgallemore/djvasa.png
+:target: https://secure.travis-ci.org/cgallemore/djvasa
 
 (Dj)ango - (Va)grant - (Sa)ltStack
 

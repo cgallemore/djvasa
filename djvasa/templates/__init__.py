@@ -7,5 +7,5 @@ class View(TemplateSpec):
     def __init__(self, project_name, **kwargs):
         self.project_name = project_name
 
-        for k, v in kwargs.iteritems():
+        for k, v in kwargs.items():
             setattr(self, k, v)

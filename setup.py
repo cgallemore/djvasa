@@ -28,13 +28,15 @@ setup(
     license='MIT',
     keywords='terminal django vagrant saltstack cli',
     classifiers=(
+        'Development Status :: 4 - Beta'
         'Environment :: Console',
+        'Framework :: Django'
         'Intended Audience :: Developers',
         'Natural Language :: English',
         'License :: OSI Approved :: MIT',
-        'Programming Language :: Python',
+        'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
-        'Topic :: Terminals :: Terminal Emulators/X Terminals',
+        'Topic :: Software Development'
     ),
     packages=['djvasa', 'djvasa.templates'],
     package_data={'djvasa': ['templates/*.mustache']},

@@ -16,36 +16,73 @@ class InitializeProjectTestCase(unittest.TestCase):
     def tearDown(self):
         super(InitializeProjectTestCase, self).tearDown()
         shutil.rmtree(os.path.join(self.root, self.project_name))
+        os.chdir(self.root)
 
     def _exists(self, files):
         for f in files:
             self.assertTrue(os.path.exists(f))
 
     def _validate_salt(self, **kwargs):
-        os.chdir(os.path.join(self.root, self.project_name, 'salt'))
-        self._exists([
-            'minion', 'roots/salt/motd', 'roots/salt/%s.sls' % self.project_name,
-            'roots/salt/requirements.sls', 'roots/salt/top.sls'
-        ])
+        os.chdir(os.path.join(self.root, self.project_name))
+        exists = [
+            'salt/minion',
+            'salt/roots/salt/motd',
+            'salt/roots/salt/%s.sls' % self.project_name,
+            'salt/roots/salt/requirements.sls',
+            'salt/roots/salt/top.sls'
+        ]
+
+        if kwargs['mysql']:
+            exists.append('salt/roots/salt/mysql.sls')
+
+        if kwargs['postgres']:
+            exists += [
+                'salt/roots/salt/postgres.sls',
+                'salt/roots/salt/pg_hba.conf',
+                'pillar/top.sls',
+                'pillar/settings.sls'
+            ]
+
+        self._exists(exists)
 
     def _validate_project_root(self, **kwargs):
-        self.assertTrue(os.path.isdir(os.path.join(os.getcwd(), self.project_name)))
-        self._exists([
-            'Vagrantfile', 'manage.py', 'requirements.txt',
-        ])
-        self.assertTrue(os.path.isdir(os.path.join(os.getcwd(), 'salt')))
+        os.chdir(os.path.join(self.root, self.project_name))
+        exists = [
+            'Vagrantfile',
+            'manage.py',
+            'requirements.txt',
+        ]
+
+        if kwargs['hg']:
+            exists.append('.hgignore')
+        else:
+            exists.append('.gitignore')
+
+        if kwargs['heroku']:
+            exists.append('Procfile')
+
+        self._exists(exists)
 
     def _validate_django(self, **kwargs):
-        os.chdir(os.path.join(os.getcwd(), self.project_name))
+        os.chdir(os.path.join(self.root, self.project_name, self.project_name))
         self._exists([
-            '__init__.py', 'settings.py', 'settingslocal.py', 'urls.py', 'wsgi.py',
-            'static/css', 'static/js', 'static/less', 'static/img', 'templates/base.html', 'public'
+            '__init__.py',
+            'settings.py',
+            'settingslocal.py',
+            'urls.py',
+            'wsgi.py',
+            'static/css',
+            'static/js',
+            'static/less',
+            'static/img',
+            'templates/base.html',
+            'public'
         ])
 
     def _kwargs(self, mysql=False, postgres=False, heroku=False, hg=False):
         return {
             'mysql': mysql,
-            'postgres': postgres,
+            'postgres': postgres or heroku,
             'heroku': heroku,
             'hg': hg
         }
@@ -59,17 +96,41 @@ class InitializeProjectTestCase(unittest.TestCase):
         self._validate_django(**kwargs)
         self._validate_salt(**kwargs)
 
-    # def test_init_with_mysql(self):
-    #     pass
-    #
-    # def test_init_with_postgres(self):
-    #     pass
-    #
-    # def test_init_with_heroku(self):
-    #     pass
-    #
-    # def test_init_with_hg(self):
-    #     pass
+    def test_init_with_mysql(self):
+        kwargs = self._kwargs(mysql=True)
+        project = main.Project(**kwargs)
+        project.initialize()
+
+        self._validate_project_root(**kwargs)
+        self._validate_django(**kwargs)
+        self._validate_salt(**kwargs)
+
+    def test_init_with_postgres(self):
+        kwargs = self._kwargs(postgres=True)
+        project = main.Project(**kwargs)
+        project.initialize()
+
+        self._validate_project_root(**kwargs)
+        self._validate_django(**kwargs)
+        self._validate_salt(**kwargs)
+
+    def test_init_with_heroku(self):
+        kwargs = self._kwargs(heroku=True)
+        project = main.Project(**kwargs)
+        project.initialize()
+
+        self._validate_project_root(**kwargs)
+        self._validate_django(**kwargs)
+        self._validate_salt(**kwargs)
+
+    def test_init_with_hg(self):
+        kwargs = self._kwargs(hg=True)
+        project = main.Project(**kwargs)
+        project.initialize()
+
+        self._validate_project_root(**kwargs)
+        self._validate_django(**kwargs)
+        self._validate_salt(**kwargs)
 
 
 
