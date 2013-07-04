@@ -2,7 +2,7 @@ packages:
     pkg.installed:
         - names:
             - python-dev
-            - python-virtualenv
+            - python-pip
             {{#mysql}}
             - mysql-server
             - python-mysqldb
@@ -12,3 +12,5 @@ packages:
             - postgresql
             - libpq-dev
             {{/postgres}}
+        - require_in:
+            - /home/vagrant/.virtualenv/{{project_name}}

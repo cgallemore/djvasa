@@ -1,3 +1,10 @@
+virtualenv:
+    pip.installed:
+        - require:
+            - pkg: python-pip
+        - require_in:
+            - /home/vagrant/.virtualenv/{{project_name}}
+
 /home/vagrant/.virtualenv/{{project_name}}:
     virtualenv.managed:
         - no-site-packages: True
@@ -6,7 +13,7 @@
         - requirements: /vagrant/requirements.txt
         - require:
             - pkg: python-dev
-            - pkg: python-virtualenv
+            - pkg: python-pip
 
 /etc/motd:
     file.managed:
