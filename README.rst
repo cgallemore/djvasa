@@ -2,7 +2,14 @@
 djvasa
 ======
 
-.. image:: https://secure.travis-ci.org/cgallemore/djvasa.png
+.. image:: https://badge.fury.io/py/djvasa.png
+    :target: http://badge.fury.io/py/djvasa
+
+.. image:: https://travis-ci.org/cgallemore/djvasa.png?branch=master
+    :target: https://travis-ci.org/cgallemore/djvasa
+
+.. image:: https://pypip.in/d/djvasa/badge.png
+    :target: https://crate.io/packages/djvasa/
 
 (Dj)ango - (Va)grant - (Sa)ltStack
 
