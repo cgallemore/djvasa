@@ -10,6 +10,7 @@
 .idea/*
 **/public
 
+README.html
 settingslocal.py
 local_settings.py
 atlassian-ide-plugin.xml
